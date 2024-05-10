@@ -6,7 +6,6 @@
 // Time Limit: 2000
 // Start: Sat Apr 27 11:05:02 2024
 
-#include <array>
 #include <cstdlib>
 #include <iostream>
 
@@ -15,8 +14,6 @@ using namespace std;
 const int ROWS = 5;
 
 int main() {
-  array<array<int, ROWS>, ROWS> rows;
-
   for (int i = 0; i < ROWS; i++) {
     for (int j = 0; j < ROWS; j++) {
       int input;

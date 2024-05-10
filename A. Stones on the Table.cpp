@@ -12,18 +12,17 @@ using namespace std;
 
 int main() {
   char last = '\0';
-  int n, i = 0, taken = 0;
+  int n, taken = 0;
   string stones;
 
   cin >> n;
   cin >> stones;
 
-  while (i < stones.size()) {
-    if (stones[i] == last)
+  for (auto stone: stones) {
+    if (stone == last)
       taken++;
-
-    last = stones[i];
-    i++;
+    else
+      last = stone;
   }
 
   cout << taken << endl;
