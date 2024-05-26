@@ -25,7 +25,7 @@ int firstElement (int arr[], int n) {
 int sumArray(int arr[], int n) {
   int sum = 0;
 
-  // 1 Ciclo for
+  // Ciclo for que se ejecuta n veces
   for (int i = 0; i < n; i++) {
     sum += arr[i];
   }
@@ -35,8 +35,9 @@ int sumArray(int arr[], int n) {
 
 // Caso de O(n^2):
 void printPairs(int arr[], int n) {
-  // Ciclos for anidados
+  // El primer ciclo for se ejecuta n veces
   for (int i = 0; i < n; i++) {
+    // El segundo ciclo for se ejecuta n*n o n^2 veces
     for (int j = 0; j < n; j++) {
       cout << arr[i] << ' ' << arr[j] << endl;
     }

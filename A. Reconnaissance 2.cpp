@@ -6,7 +6,6 @@
 // Time Limit: 2000
 // Start: Sat May 25 11:09:16 2024
 
-#include <algorithm>
 #include <iostream>
 #include <limits>
 #include <vector>
@@ -24,15 +23,11 @@ int main() {
     soldiers.push_back({a, i + 1});
   }
 
-  sort(soldiers.begin(), soldiers.end(), [](pair<int, int> a, pair<int, int> b) {
-      return a.first < b.first;
-  });
-
   int minDiff = numeric_limits<int>().max();
   int minIndex = 0;
 
   for (int i = 0; i < n - 1; i++) {
-    int diff = soldiers[i + 1].first - soldiers[i].first;
+    int diff = abs(soldiers[i + 1].first - soldiers[i].first);
 
     if (diff < minDiff) {
       minDiff = diff;
@@ -40,7 +35,11 @@ int main() {
     }
   }
 
-	cout << soldiers[minIndex].second << ' ' << soldiers[minIndex + 1].second << endl;
+  if (abs(soldiers[0].first - soldiers.back().first) < minDiff) {
+	  cout << soldiers[0].second << ' ' << soldiers.back().second << endl;
+  } else {
+	  cout << soldiers[minIndex].second << ' ' << soldiers[minIndex + 1].second << endl;
+  }
 
 	return 0;
 }
