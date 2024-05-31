@@ -19,14 +19,18 @@ const i64 I64_MAX = numeric_limits<i64>().max();
 const string YES = "YES";
 const string NO = "NO";
 
+template <typename T> inline void print_array(T arr, size_t n, string end = "", string separator = " ") {
+  for (int i = 0; i < n - 1; i++) {
+    cout << arr[i] << separator;
+  }
+
+  cout << arr[n - 1] << end << endl;
+}
+
 template <typename T> inline void dbg_array(T arr, size_t n) {
   cout << '[';
 
-  for (int i = 0; i < n - 1; i++) {
-    cout << arr[i] << ", ";
-  }
-
-  cout << arr[n - 1] << ']' << endl;
+  print_array(arr, n, "]", ", ");
 }
 template <typename T> inline void dbg_map(T m) {
   cout << '{' << endl;
@@ -68,9 +72,10 @@ void solve() {
   int n, m;
   cin >> n >> m;
   int candidates = n + m + 1;
-  int a[candidates], b[candidates], np[candidates - 1], nt[candidates - 1], p[candidates], t[candidates], s[candidates];
-  vector<int> skills;
+  i64 a[candidates], b[candidates];
+  vector<i64> skills(candidates);
 
+  // Read input
   for (int i = 0; i < candidates; i++) {
     cin >> a[i];
   }
@@ -79,121 +84,96 @@ void solve() {
     cin >> b[i];
   }
 
-  np[candidates - 2] = candidates - 1;
-  nt[candidates - 2] = candidates - 1;
+  /**
+   * pi: (Partition index) index of the arrays where the first position gets filled.
+   * p: number of programmers
+   * t: number of testers
+   * sum: partial sum of the team's skill up to the partition index
+   */
+  i64 pi(0), p(0), t(0), sum(0);
 
-  for (int i = candidates - 3; i > -1; i--) {
-    if (a[i + 1] > b[i + 1]) {
-      np[i] = i + 1;
-      nt[i] = nt[i + 1];
+  // Assign candidates to positions until first position gets filled, count the number of candidates per position and the sum of the team's skill.
+  while (p < n && t < m) {
+    if (a[pi] > b[pi]) {
+      p++;
+      sum += a[pi];
     } else {
-      nt[i] = i + 1;
-      np[i] = np[i + 1];
+      t++;
+      sum += b[pi];
+    }
+
+    pi++;
+  }
+
+  i64 total_sum = sum;
+  bool p_filled = p == n;
+
+  // Calculate the total sum of the team's skill by calculating the skill contributed by the remaining candidates.
+  for (int i = pi; i < candidates; i++) {
+    total_sum += p_filled ? b[i] : a[i];
+  }
+
+  // Substract each remaining candidate's from the total skill of the team in order to find the total skill of the team if said candidate never presented themselves.
+  for (int i = pi; i < candidates; i++) {
+    skills[i] = total_sum - (p_filled ? b[i] : a[i]);
+  }
+  
+  /**
+   * Calculate the answer for all candidates before the partition index which would not affect this index's value if they were to be removed.
+   * This would be testers when programmers is the first position to be filled and programmers when testers is the position to be filled.
+   */
+  for (int i = 0; i < pi; i++) {
+    if (p == n && a[i] < b[i]) {
+      skills[i] = total_sum - b[i];
+    } else if (t == m && a[i] > b[i]) {
+      skills[i] = total_sum - a[i];
     }
   }
 
+  i64 new_pi = pi;
+  i64 new_p = p;
+  i64 new_t = t;
+  i64 new_sum = sum;
 
-  p[0] = 0;
-  t[0] = 0;
-  s[0] = 0;
+  // Remove a candidate from the position that gets filled in order to calculate a new partition index.
+  if (p_filled)
+    new_p--;
+  else
+    new_t--;
 
-  int partition_idx = -1;
-  bool programmers_filled = true;
-
-  if (n == 0) {
-    partition_idx = 0;
-    t[0] = 1;
-    s[0] = b[0];
-  } else if (m == 0) {
-    partition_idx = 0;
-    programmers_filled = false;
-    p[0] = 1;
-    s[0] = a[0];
-  } else if (a[0] > b[0]) {
-    p[0] = 1;
-    s[0] = a[0];
-  } else {
-    t[0] = 1;
-    s[0] = b[0];
-  }
-
-  for (int i = 1; i < candidates - 1; i++) {
-    if (p[i - 1] == n) {
-      if (partition_idx == -1) {
-        partition_idx = i;
-      }
-
-      p[i] = p[i - 1];
-      t[i] = t[i - 1] + 1;
-      s[i] = s[i - 1] + b[i];
-    } else if (t[i - 1] == m) {
-      if (partition_idx == -1) {
-        partition_idx = i;
-        programmers_filled = false;
-      }
-
-      p[i] = p[i - 1] + 1;
-      t[i] = t[i - 1];
-      s[i] = s[i - 1] + a[i];
-    } else if (a[i] > b[i]) {
-      p[i] = p[i - 1] + 1;
-      t[i] = t[i - 1];
-      s[i] = s[i - 1] + a[i];
+  // Calculate new pi and sum.
+  while (new_p < n && new_t < m) {
+    if (a[new_pi] > b[new_pi]) {
+      new_p++;
+      new_sum += a[new_pi];
     } else {
-      p[i] = p[i - 1];
-      t[i] = t[i - 1] + 1;
-      s[i] = s[i - 1] + b[i];
+      new_t++;
+      new_sum += b[new_pi];
     }
+
+    new_pi++;
   }
 
-  for (int i = 0; i < candidates; i++) {
-    if (i < partition_idx) {
-      int p0(0), t0(0), skill(0);
+  i64 new_total_sum = new_sum;
 
-      if (i > 0) {
-        p0 = p[i - 1];
-        t0 = t[i - 1];
-        skill = s[i - 1];
-      }
+  // Calculate new total sum.
+  for (int i = new_pi; i < candidates; i++) {
+    new_total_sum += new_p == n ? b[i] : a[i];
+  }
 
-      for (int j = i + 1; j < candidates; j++) {
-        if (p0 == n) {
-          t0++;
-          skill += b[j];
-        } else if (t0 == m) {
-          p0++;
-          skill += a[j];
-        } else if (a[j] > b[j]) {
-          p0++;
-          skill += a[j];
-        } else {
-          t0++;
-          skill += b[j];
-        }
-      }
-
-      skills.push_back(skill);
-    } else {
-      int total_skill = s[candidates - 2];
-
-      if (programmers_filled) {
-        if (i == candidates - 1)
-          skills.push_back(total_skill);
-        else
-          skills.push_back(total_skill - b[i] + b[candidates - 1]);
-      } else {
-        if (i == candidates - 1)
-          skills.push_back(total_skill);
-        else
-          skills.push_back(total_skill - a[i] + a[candidates - 1]);
-      }
+  // Calculate new team skill for each removed member.
+  for (int i = 0; i < pi; i++) {
+    if (p == n && a[i] > b[i]) {
+      skills[i] = new_total_sum - a[i];
+    } else if (t == m && a[i] < b[i]) {
+      skills[i] = new_total_sum - b[i];
     }
   }
 
   for (int i = 0; i < candidates; i++) {
     cout << skills[i] << ' ';
   }
-
+  
   cout << endl;
 }
 
