@@ -161,7 +161,7 @@ void solve() {
     new_total_sum += new_p == n ? b[i] : a[i];
   }
 
-  // Calculate new team skill for each removed member.
+  // Calculate new team skill for each removed member up to the old partition index.
   for (int i = 0; i < pi; i++) {
     if (p == n && a[i] > b[i]) {
       skills[i] = new_total_sum - a[i];
@@ -170,11 +170,7 @@ void solve() {
     }
   }
 
-  for (int i = 0; i < candidates; i++) {
-    cout << skills[i] << ' ';
-  }
-  
-  cout << endl;
+  print_array(skills, candidates);
 }
 
 int main() {
