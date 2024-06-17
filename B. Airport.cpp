@@ -1,14 +1,15 @@
-// Problem: A. Puzzles
-// Contest: Codeforces Round 196 (Div. 2)
+// Problem: B. Airport
+// Contest: Codeforces Round 134 (Div. 2)
 // Judge: Codeforces
-// URL: https://codeforces.com/problemset/problem/337/A
+// URL: https://codeforces.com/problemset/problem/218/B
 // Memory Limit: 256
-// Time Limit: 1000
-// Start: Sat Jun 15 17:42:08 2024
+// Time Limit: 2000
+// Start: Sat Jun 15 18:10:42 2024
 
-#include <algorithm>
 #include <bits/stdc++.h>
-#include <climits>
+#include <functional>
+#include <queue>
+#include <vector>
 
 using namespace std;
 
@@ -68,23 +69,43 @@ template <typename K, typename V> inline void dbg(unordered_map<K, V> m) { dbg_m
 template <typename T> inline void dbg(set<T> s) { dbg_set(s); }
 template <typename T> inline void dbg(unordered_set<T> s) { dbg_set(s); }
 
+template <typename T, typename C>
+i64 airport(priority_queue<int, T, C>&queue, int n) {
+  i64 cost = 0;
+  
+  for (int i = 0; i < n; i++) {
+    int top = queue.top();
+    queue.pop();
+    cost += top;
+
+    if (top > 1) {
+      queue.push(top - 1);
+    }
+  }
+
+  return cost;
+}
+
 void solve() {
   int n, m;
   cin >> n >> m;
-  vector<int> puzzles(m);
+  priority_queue<int> max_queue;
+  priority_queue<int, vector<int>, greater<int>> min_queue;
 
-  for (int& pieces: puzzles)
-    cin >> pieces;
+  for (int i = 0; i < m; i++) {
+    int ai;
+    cin >> ai;
 
-  sort(puzzles.begin(), puzzles.end());
-
-  int min_diff = INT_MAX;
-
-  for (int i = 0; i <= m - n; i++) {
-    min_diff = min(min_diff, puzzles[i + n - 1] - puzzles[i]);
+    if (ai > 0) {
+      max_queue.push(ai);
+      min_queue.push(ai);
+    }
   }
 
-	cout << min_diff << endl;
+  i64 max_cost = airport(max_queue, n);
+  i64 min_cost = airport(min_queue, n);
+
+  cout << max_cost << ' ' << min_cost << endl;
 }
 
 int main() {

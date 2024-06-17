@@ -1,14 +1,12 @@
-// Problem: A. Puzzles
-// Contest: Codeforces Round 196 (Div. 2)
+// Problem: A. Chat room
+// Contest: Codeforces Beta Round 54 (Div. 2)
 // Judge: Codeforces
-// URL: https://codeforces.com/problemset/problem/337/A
+// URL: https://codeforces.com/problemset/problem/58/A
 // Memory Limit: 256
 // Time Limit: 1000
-// Start: Sat Jun 15 17:42:08 2024
+// Start: Sat Jun 15 17:52:48 2024
 
-#include <algorithm>
 #include <bits/stdc++.h>
-#include <climits>
 
 using namespace std;
 
@@ -68,30 +66,31 @@ template <typename K, typename V> inline void dbg(unordered_map<K, V> m) { dbg_m
 template <typename T> inline void dbg(set<T> s) { dbg_set(s); }
 template <typename T> inline void dbg(unordered_set<T> s) { dbg_set(s); }
 
-void solve() {
-  int n, m;
-  cin >> n >> m;
-  vector<int> puzzles(m);
+string solve() {
+  string s;
+  cin >> s;
+  int i = 0;
 
-  for (int& pieces: puzzles)
-    cin >> pieces;
-
-  sort(puzzles.begin(), puzzles.end());
-
-  int min_diff = INT_MAX;
-
-  for (int i = 0; i <= m - n; i++) {
-    min_diff = min(min_diff, puzzles[i + n - 1] - puzzles[i]);
+  for (char ch: s) {
+    if (ch == 'h' && i == 0) {
+      i++;
+    } else if (ch == 'e' && i == 1) {
+      i++;
+    } else if (ch == 'l' && (i == 2 || i == 3)) {
+      i++;
+    } else if (ch == 'o' && i == 4) {
+      return YES;
+    }
   }
 
-	cout << min_diff << endl;
+	return NO;
 }
 
 int main() {
   ios_base::sync_with_stdio(0);
   cin.tie(0);
   cin.clear();
-  solve();
+  cout << solve() << endl;
 
 	return 0;
 }

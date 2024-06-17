@@ -1,14 +1,13 @@
-// Problem: A. Puzzles
-// Contest: Codeforces Round 196 (Div. 2)
+// Problem: B. Jeff and Periods
+// Contest: Codeforces Round 204 (Div. 2)
 // Judge: Codeforces
-// URL: https://codeforces.com/problemset/problem/337/A
+// URL: https://codeforces.com/problemset/problem/352/B
 // Memory Limit: 256
 // Time Limit: 1000
-// Start: Sat Jun 15 17:42:08 2024
+// Start: Sat Jun 15 19:29:53 2024
 
-#include <algorithm>
 #include <bits/stdc++.h>
-#include <climits>
+#include <vector>
 
 using namespace std;
 
@@ -69,22 +68,14 @@ template <typename T> inline void dbg(set<T> s) { dbg_set(s); }
 template <typename T> inline void dbg(unordered_set<T> s) { dbg_set(s); }
 
 void solve() {
-  int n, m;
-  cin >> n >> m;
-  vector<int> puzzles(m);
+  int n;
+  cin >> n;
+  vector<int> a(n);
 
-  for (int& pieces: puzzles)
-    cin >> pieces;
+  for (auto& ai: a)
+    cin >> ai;
 
-  sort(puzzles.begin(), puzzles.end());
-
-  int min_diff = INT_MAX;
-
-  for (int i = 0; i <= m - n; i++) {
-    min_diff = min(min_diff, puzzles[i + n - 1] - puzzles[i]);
-  }
-
-	cout << min_diff << endl;
+	cout << "This is a template test. Input value is: " << n << endl;
 }
 
 int main() {

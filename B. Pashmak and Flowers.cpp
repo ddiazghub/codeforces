@@ -1,14 +1,12 @@
-// Problem: A. Puzzles
-// Contest: Codeforces Round 196 (Div. 2)
+// Problem: B. Pashmak and Flowers
+// Contest: Codeforces Round 261 (Div. 2)
 // Judge: Codeforces
-// URL: https://codeforces.com/problemset/problem/337/A
+// URL: https://codeforces.com/problemset/problem/459/B
 // Memory Limit: 256
 // Time Limit: 1000
-// Start: Sat Jun 15 17:42:08 2024
+// Start: Sat Jun 15 18:59:39 2024
 
-#include <algorithm>
 #include <bits/stdc++.h>
-#include <climits>
 
 using namespace std;
 
@@ -69,22 +67,22 @@ template <typename T> inline void dbg(set<T> s) { dbg_set(s); }
 template <typename T> inline void dbg(unordered_set<T> s) { dbg_set(s); }
 
 void solve() {
-  int n, m;
-  cin >> n >> m;
-  vector<int> puzzles(m);
+  int n;
+  cin >> n;
+  map<i64, i64> flowers;
 
-  for (int& pieces: puzzles)
-    cin >> pieces;
-
-  sort(puzzles.begin(), puzzles.end());
-
-  int min_diff = INT_MAX;
-
-  for (int i = 0; i <= m - n; i++) {
-    min_diff = min(min_diff, puzzles[i + n - 1] - puzzles[i]);
+  for (int i = 0; i < n; i++) {
+    i64 b;
+    cin >> b;
+    flowers[b]++;
   }
+  
+  auto minimum = flowers.cbegin();
+  auto maximum = flowers.crbegin();
+  i64 diff = maximum->first - minimum->first;
+  i64 ways = diff == 0 ? maximum->second * (maximum->second - 1) / 2 : maximum->second * minimum->second;
 
-	cout << min_diff << endl;
+	cout << diff << ' ' << ways << endl;
 }
 
 int main() {

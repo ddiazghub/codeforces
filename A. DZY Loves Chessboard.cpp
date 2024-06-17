@@ -1,14 +1,14 @@
-// Problem: A. Puzzles
-// Contest: Codeforces Round 196 (Div. 2)
+// Problem: A. DZY Loves Chessboard
+// Contest: Codeforces Round 254 (Div. 2)
 // Judge: Codeforces
-// URL: https://codeforces.com/problemset/problem/337/A
+// URL: https://codeforces.com/problemset/problem/445/A
 // Memory Limit: 256
 // Time Limit: 1000
-// Start: Sat Jun 15 17:42:08 2024
+// Start: Sat Jun 15 18:42:15 2024
 
-#include <algorithm>
 #include <bits/stdc++.h>
-#include <climits>
+#include <utility>
+#include <vector>
 
 using namespace std;
 
@@ -71,20 +71,27 @@ template <typename T> inline void dbg(unordered_set<T> s) { dbg_set(s); }
 void solve() {
   int n, m;
   cin >> n >> m;
-  vector<int> puzzles(m);
+  vector<string> grid(n);
 
-  for (int& pieces: puzzles)
-    cin >> pieces;
-
-  sort(puzzles.begin(), puzzles.end());
-
-  int min_diff = INT_MAX;
-
-  for (int i = 0; i <= m - n; i++) {
-    min_diff = min(min_diff, puzzles[i + n - 1] - puzzles[i]);
+  for (auto& row: grid) {
+    cin >> row;
   }
 
-	cout << min_diff << endl;
+  char a = 'B';
+  char b = 'W';
+
+  for (int i = 0; i < n; i++) {
+    for (int j = 0; j < m; j++) {
+      if (grid[i][j] == '.') {
+        grid[i][j] = j % 2 == 0 ? a : b;
+      }
+    }
+
+    swap(a, b);
+  }
+
+  for (auto& row: grid)
+    cout << row << endl;
 }
 
 int main() {
