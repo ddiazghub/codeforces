@@ -1,3 +1,5 @@
+#include <algorithm>
+#include <cstdio>
 #include <iostream>
 
 using namespace std;
@@ -10,22 +12,36 @@ int main (int argc, char *argv[]) {
   int n;
   cin >> n;
 
+  char spaces[n];
+  char buffer[2 * n];
+
+  fill(spaces, spaces + n - 1, ' ');
+
   for (int i = 0; i < n; i++) {
-    for (int j = 0; j < n - (i + 1); j++) {
-      cout << ' ';
-    }
-
-    for (int j = 0; j <= i; j++) {
-      cout << "* ";
-    }
-    
-    cout << '\n';
+    buffer[2 * i] = '*';
+    buffer[2 * i + 1] = ' ';
   }
 
-  for (int i = 0; i < n - 1; i++) {
-    cout << ' ';
+  spaces[n - 1] = '\0';
+  buffer[2 * n] = '\0';
+
+  cout << spaces << "*\n";
+
+  for (int row = 1; row < n - 1; row++) {
+    spaces[n - (row + 1)] = '\0';
+    buffer[2 * row + 1] = '\0';
+  
+    cout << spaces << buffer << '\n';
+
+    spaces[n - (row + 1)] = ' ';
+    buffer[2 * row + 1] = ' ';
   }
-  cout << '*' << endl;
+  
+  if (n > 1) {
+    cout << buffer << '\n';
+  }
+
+  cout << spaces << '*';
 
   return 0;
 }
